@@ -1,0 +1,18 @@
+>> How did you choose your implementation language?
+Limit order book obivously imposes real-time performance requirements and mus
+t also be robust. Therefore, I chose C++ that is both fast (compiled, low-level, not virtualized and open to further optimizations) and robust (as opposed to scripts).
+
+>> What is the time complexity for processing an Add Order message?
+Assuming N is the number of active orders and M is the monitored size, the complexity is O(log N + M). 
+ - O(log N) is required to insert into order map and sell/buy order multimap
+ - O(M) is the tree traversal to re-calculate the new buy/sell price of the monitored quantity
+
+>> What is the time complexity for processing a Reduce Order message?
+Assuming N is the number of active orders and M is the monitored size, the complexity is O(log N + M). 
+- O(log N) is required to search for the order in the order map 
+- O(log N) is required to search for the order in the buy or sell order map
+- O(log N) is required to erase a cancelled order from the order map and the sell/buy order map
+- O(M) is the tree traversal to re-calculate the new buy/sell price of the monitored quantity
+
+>> If your implementation were put into production and found to be too slow, what ideas would you try out to improve its performance? (Other than reimplementing it in a different language such as C or C++.)
+I would consider profiling the code and optimizing the data structures introducing performance-improving heuristics, improving (or completely getting rid of) dynamic memory allocation, reducing the number of places where data is copied, improving cachability of the code, alignment, etc. 
